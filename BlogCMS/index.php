@@ -18,7 +18,7 @@ $nbUsers = $conn->query($sqlUsers)->fetchColumn();
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Admin - Dashboard</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
