@@ -161,7 +161,7 @@ $articles = getAllArticles($pdo);
                     <article class="masonry__brick entry format-standard animate-this">
                             
                         <div class="entry__thumb">
-                            <a href="single_article.php?id=<?php $article['ID_article'] ?>" class="entry__thumb-link">
+                            <a href="single_article.php?id=<?php echo $article['ID_article'] ?>" class="entry__thumb-link">
                                 <img src="<?php echo $article['img_article'] ?>" 
                                         alt="<?php echo ($article['title']); ?>"> 
                             </a>
@@ -170,7 +170,7 @@ $articles = getAllArticles($pdo);
                         <div class="entry__text">
                             <div class="entry__header">
     
-                                <h2 class="entry__title"><a href="single_article.php?id=<?php $article['ID_article'] ?>"> <?php echo $article['title'];  ?> </a></h2>
+                                <h2 class="entry__title"><a href="single_article.php?id=<?php echo $article['ID_article'] ?>"> <?php echo $article['title'];  ?> </a></h2>
                                 <div class="entry__meta">
                                     <span class="entry__meta-cat">
                                          <a href="category.php?id=<?php echo $article['id_categoy']; ?>">
@@ -178,7 +178,7 @@ $articles = getAllArticles($pdo);
                                         </a>
                                     </span>
                                     <span class="entry__meta-date">
-                                        <a href="single_article.php?id=<?php $article['ID_article'] ?>">
+                                        <a href="single_article.php?id=<?php echo $article['ID_article'] ?>">
                                             <?php echo date('M d, Y', strtotime($article['created_at'])); ?>
                                         </a>
                                     </span>

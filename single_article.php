@@ -98,7 +98,7 @@ $comments = getComments($pdo, $id);
             <nav class="header__nav-wrap">
 
                 <ul class="header__nav">
-                    <li><a href="index.html" title="">Home</a></li>
+                    <li><a href="index.php" title="">Home</a></li>
                     <li class="has-children">
                         <a href="#0" title="">Categories</a>
                         <ul class="sub-menu">
@@ -161,19 +161,19 @@ $comments = getComments($pdo, $id);
 
                     <div class="media-wrap entry__media">
                         <div class="entry__post-thumb">
-                            <img src="<?php  $article['img_article']  ?>" sizes="(max-width: 2000px) 100vw, 2000px" alt="<?php $article['title'] //attention ?>">
+                            <img src="<?php echo $article['img_article']  ?>" sizes="(max-width: 2000px) 100vw, 2000px" alt="<?php echo $article['title'] //attention ?>">
                         </div>
                     </div>
 
                     <div class="content__page-header entry__header">
                         <h1 class="display-1 entry__title">
-                        <?php $article['title'] ?>
+                        <?php echo $article['title'] ?>
                         </h1>
                         <ul class="entry__header-meta">
-                            <li class="author"> <a href="#0"><?php $author['userName'] ?> </a></li>
-                            <li class="date"> <?php date('F d, Y', strtotime($article['created_at'])) ?> </li>
+                            <li class="author"> <a href="#0"><?php echo $author['userName'] ?> </a></li>
+                            <li class="date"> <?php echo date('F d, Y', strtotime($article['created_at'])) ?> </li>
                             <li class="cat-links">
-                                <a href="#0"><?php $category['name_category'] ?></a>
+                                <a href="#0"><?php echo $category['name_category'] ?></a>
                             </li>
                         </ul>
                     </div> <!-- end entry__header -->
@@ -181,7 +181,7 @@ $comments = getComments($pdo, $id);
                     <div class="entry__content">
 
                         <p class="lead drop-cap">
-                        <?php $article['content'] ?>
+                        <?php echo $article['content'] ?>
                         </p>
 
                     </div> <!-- end entry content -->
@@ -193,7 +193,7 @@ $comments = getComments($pdo, $id);
 
                     <div id="comments" class="column large-12">
 
-                        <h3 class="h2"><?php count($comments) ?> Comments</h3>
+                        <h3 class="h2"><?php echo count($comments) ?> Comments</h3>
         
                         <!-- START commentlist -->
                         <ol class="commentlist">
@@ -209,10 +209,10 @@ $comments = getComments($pdo, $id);
                                 <div class="comment__content">
         
                                     <div class="comment__info">
-                                        <div class="comment__author"> <?php $comment_user['userName'] ?> </div>
+                                        <div class="comment__author"> <?php echo $comment_user['userName'] ?> </div>
         
                                         <div class="comment__meta">
-                                            <div class="comment__time"><?php date('F d, Y', strtotime($comment['created_at'])) ?></div>
+                                            <div class="comment__time"><?php echo date('F d, Y', strtotime($comment['created_at'])) ?></div>
                                             <div class="comment__reply">
                                                 <a class="comment-reply-link" href="#0">Reply</a>
                                             </div>
@@ -220,7 +220,7 @@ $comments = getComments($pdo, $id);
                                     </div>
         
                                     <div class="comment__text">
-                                    <p><?php $comment['content'] ?></p>
+                                    <p><?php echo $comment['content'] ?></p>
                                     </div>
         
                                 </div>
