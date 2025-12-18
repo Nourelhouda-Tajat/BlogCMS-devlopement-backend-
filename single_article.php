@@ -1,4 +1,6 @@
 <?php
+
+session_start();
 require_once('config.php');
 require_once('fonctions.php');
 
@@ -6,15 +8,28 @@ if (!isset($_GET['id'])) {
     header("Location: index.php");
     exit;
 }
+
 $id = $_GET['id'];
+
+// Traitement du formulaire de commentaire
+    if (isset($_POST['comment_msg'])) {
+    $content = trim($_POST['comment_msg']);
+    if (!empty($content)) {
+        $id_user = $_SESSION['user_id'] ?? null;
+        addComment($pdo, $content, $id, $id_user);
+        header("Location: single_article.php?id=" . $id);
+        exit;
+    }
+}
 
 $article = getArticleById($pdo, $id);
 $category = getCategoryById($pdo, $article['id_categoy']);
 $author = getUserById($pdo, $article['id_user']);
 $comments = getComments($pdo, $id);
-
-
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -170,10 +185,10 @@ $comments = getComments($pdo, $id);
                         <?php echo $article['title'] ?>
                         </h1>
                         <ul class="entry__header-meta">
-                            <li class="author"> <a href="#0"><?php echo $author['userName'] ?> </a></li>
-                            <li class="date"> <?php echo date('F d, Y', strtotime($article['created_at'])) ?> </li>
+                            <li class="author"> <a href="#0"><?php echo $author['userName']; ?> </a></li>
+                            <li class= "date"><?php echo date('F d, Y', strtotime($article['created_at'])); ?></li>
                             <li class="cat-links">
-                                <a href="#0"><?php echo $category['name_category'] ?></a>
+                                <a href="#0"><?php echo $category['name_category']; ?></a>
                             </li>
                         </ul>
                     </div> <!-- end entry__header -->
@@ -188,87 +203,82 @@ $comments = getComments($pdo, $id);
 
                 </article> 
 
-
                 <div class="comments-wrap">
 
-                    <div id="comments" class="column large-12">
+    <div id="comments" class="column large-12">
 
-                        <h3 class="h2"><?php echo count($comments) ?> Comments</h3>
-        
-                        <!-- START commentlist -->
-                        <ol class="commentlist">
-                            <?php foreach($comments as $comment): ?>
-                                <?php $comment_user = getUserById($pdo, $comment['id_user']); ?>
-        
-                            <li class="depth-1 comment">
-        
-                                <div class="comment__avatar">
-                                    <img class="avatar" src="assets/images/avatars/user-01.jpg" alt="" width="50" height="50">
+        <h3 class="h2"><?php echo count($comments); ?> Comments</h3>
+
+        <!-- START commentlist -->
+        <ol class="commentlist">
+            <?php foreach($comments as $comment): ?>
+                <?php 
+                if ($comment['id_user']) {
+                    $comment_user = getUserById($pdo, $comment['id_user']);
+                    $username = $comment_user['userName'];
+                } else {
+                    $username = "Invité";
+                }
+                ?>
+
+                <li class="depth-1 comment">
+                    
+                    <div class="comment__avatar">
+                        <img class="avatar" src="assets/images/avatars/user-01.jpg" alt="" width="50" height="50">
+                    </div>
+
+                    <div class="comment__content">
+
+                        <div class="comment__info">
+                            <div class="comment__author"><?php echo $username; ?></div>
+
+                            <div class="comment__meta">
+                                <div class="comment__time"><?php echo date('F d, Y', strtotime($comment['created_at'])); ?></div>
+                                <div class="comment__reply">
+                                    <a class="comment-reply-link" href="#0">Reply</a>
                                 </div>
-        
-                                <div class="comment__content">
-        
-                                    <div class="comment__info">
-                                        <div class="comment__author"> <?php echo $comment_user['userName'] ?> </div>
-        
-                                        <div class="comment__meta">
-                                            <div class="comment__time"><?php echo date('F d, Y', strtotime($comment['created_at'])) ?></div>
-                                            <div class="comment__reply">
-                                                <a class="comment-reply-link" href="#0">Reply</a>
-                                            </div>
-                                        </div>
-                                    </div>
-        
-                                    <div class="comment__text">
-                                    <p><?php echo $comment['content'] ?></p>
-                                    </div>
-        
-                                </div>
-        
-                            </li> <!-- end comment level 1 -->
-                            <?php endforeach; ?>
-                        </ol>
-                        <!-- END commentlist -->
-
-                    </div> <!-- end comments -->
-
-                    <div class="column large-12 comment-respond">
-
-                        <!-- START respond -->
-                        <div id="respond">
-            
-                            <h3 class="h2">Add Comment <span>Your email address will not be published</span></h3>
-            
-                            <form name="contactForm" id="contactForm" method="post" action="" autocomplete="off">
-                                <fieldset>
-            
-                                    <div class="form-field">
-                                        <input name="cName" id="cName" class="full-width" placeholder="Your Name" value="" type="text">
-                                    </div>
-            
-                                    <div class="form-field">
-                                        <input name="cEmail" id="cEmail" class="full-width" placeholder="Your Email" value="" type="text">
-                                    </div>
-            
-                                    <div class="form-field">
-                                        <input name="cWebsite" id="cWebsite" class="full-width" placeholder="Website" value="" type="text">
-                                    </div>
-            
-                                    <div class="message form-field">
-                                        <textarea name="cMessage" id="cMessage" class="full-width" placeholder="Your Message"></textarea>
-                                    </div>
-            
-                                    <input name="submit" id="submit" class="btn btn--primary btn-wide btn--large full-width" value="Add Comment" type="submit">
-            
-                                </fieldset>
-                            </form> <!-- end form -->
-            
+                            </div>
                         </div>
-                        <!-- END respond-->
+
+                        <div class="comment__text">
+                            <p><?php echo $comment['content']; ?></p>
+                        </div>
+
+                    </div>
+
+                </li>
+
+            <?php endforeach; ?>
+        </ol>
+        <!-- END commentlist -->
+
+    </div> <!-- end comments -->
+
+    <div class="column large-12 comment-respond">
+
+        <!-- START respond -->
+        <div id="respond">
             
-                    </div> <!-- end comment-respond -->
-            
-                </div> <!-- end comments-wrap -->
+            <h3 class="h2">Add Comment</h3>
+
+            <form method="POST" action="">
+                <fieldset>
+                    <div class="message form-field">
+                        <textarea name="comment_msg" id="comment_msg" class="full-width" placeholder="Your Message"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn-wide btn--large full-width">Add Comment</button>
+                </fieldset>
+            </form>
+
+        </div>
+        <!-- END respond-->
+
+    </div> <!-- end comment-respond -->
+
+</div> <!-- end comments-wrap -->
+
+
             </main>
 
         </div> <!-- end s-content -->
