@@ -1,51 +1,33 @@
-
 <?php
+session_start();
 require_once('config.php');
 require_once('fonctions.php');
 
-// Récupérer tous les articles
 $articles = getAllArticles($pdo);
 ?>
-
-
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
-
-    <!--- basic page needs
-    ================================================== -->
     <meta charset="utf-8">
-    <title>Typerite</title>
+    <title>Home - blogCMS</title>
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <!-- mobile specific metas
-    ================================================== -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSS
-    ================================================== -->
+    
     <link rel="stylesheet" href="assets/css/base.css">
     <link rel="stylesheet" href="assets/css/vendor.css">
     <link rel="stylesheet" href="assets/css/main.css">
-
-    <!-- script
-    ================================================== -->
+    
     <script src="assets/js/modernizr.js"></script>
-
-    <!-- favicons
-    ================================================== -->
+    
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="manifest" href="site.webmanifest">
-
 </head>
 
-<body>
+<body class="ss-bg-white">
 
-    <!-- preloader
-    ================================================== -->
     <div id="preloader">
         <div id="loader" class="dots-fade">
             <div></div>
@@ -56,19 +38,15 @@ $articles = getAllArticles($pdo);
 
     <div id="top" class="s-wrap site-wrapper">
 
-        <!-- site header
-        ================================================== -->
-        <header class="s-header">
-
+        <header class="s-header header">
             <div class="header__top">
                 <div class="header__logo">
-                    <a class="site-logo" href="index.html">
+                    <a class="site-logo" href="index.php">
                         <img src="assets/images/logo.svg" alt="Homepage">
                     </a>
                 </div>
 
                 <div class="header__search">
-    
                     <form role="search" method="get" class="header__search-form" action="#">
                         <label>
                             <span class="hide-content">Search for:</span>
@@ -76,45 +54,27 @@ $articles = getAllArticles($pdo);
                         </label>
                         <input type="submit" class="header__search-submit" value="Search">
                     </form>
-        
                     <a href="#0" title="Close Search" class="header__search-close">Close</a>
-        
-                </div>  <!-- end header__search -->
+                </div>
 
-                <!-- toggles -->
                 <a href="#0" class="header__search-trigger"></a>
                 <a href="#0" class="header__menu-toggle"><span>Menu</span></a>
-
-            </div> <!-- end header__top -->
+            </div>
 
             <nav class="header__nav-wrap">
-
                 <ul class="header__nav">
-                    <li class="current"><a href="index.html" title="">Home</a></li>
-                    <li class="has-children">
-                        <a href="#0" title="">Categories</a>
-                        <ul class="sub-menu">
-                        <li><a href="category.html">Lifestyle</a></li>
-                        <li><a href="category.html">Health</a></li>
-                        <li><a href="category.html">Family</a></li>
-                        <li><a href="category.html">Management</a></li>
-                        <li><a href="category.html">Travel</a></li>
-                        <li><a href="category.html">Work</a></li>
-                        </ul>
-                    </li>
-                    <li class="has-children">
-                        <a href="#0" title="">Blog Posts</a>
-                        <ul class="sub-menu">
-                        <li><a href="single-video.html">Video Post</a></li>
-                        <li><a href="single-audio.html">Audio Post</a></li>
-                        <li><a href="single-gallery.html">Gallery Post</a></li>
-                        <li><a href="single-standard.html">Standard Post</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="styles.html" title="">Styles</a></li>
-                    <li><a href="page-about.html" title="">About</a></li>
-                    <li><a href="page-contact.html" title="">Contact</a></li>
-                </ul> <!-- end header__nav -->
+                    <li><a href="index.php" title="">Home</a></li>
+                    
+                    <?php if (isLoggedIn()): ?>
+                        <?php if (isAuthor()): ?>
+                            <li><a href="dashboard.php" title="">Dashboard</a></li>
+                        <?php endif; ?>
+                        <li><a href="#0" title="">Welcome, <?php echo $_SESSION['username']; ?></a></li>
+                        <li><a href="login.php?action=logout" title="">Logout</a></li>
+                    <?php else: ?>
+                        <li><a href="login.php" title="">Login</a></li>
+                    <?php endif; ?>
+                </ul>
 
                 <ul class="header__social">
                     <li class="ss-facebook">
@@ -129,100 +89,65 @@ $articles = getAllArticles($pdo);
                     </li>
                     <li class="ss-dribbble">
                         <a href="#0">
-                            <span class="screen-reader-text">Dribbble</span>
+                            <span class="screen-reader-text">Instagram</span>
                         </a>
                     </li>
-                    <li class="ss-pinterest">
+                    <li class="ss-behance">
                         <a href="#0">
                             <span class="screen-reader-text">Behance</span>
                         </a>
                     </li>
                 </ul>
-
-            </nav> <!-- end header__nav-wrap -->
-
-            
-
-        </header> <!-- end s-header -->
+            </nav>
+        </header>
 
         <div class="s-content">
-            
             <div class="masonry-wrap">
-
                 <div class="masonry">
-    
                     <div class="grid-sizer"></div>
-                      <?php foreach($articles as $article): ?>
-                    <?php 
-                    // Récupérer la catégorie de cet article
-                    $category = getCategoryById($pdo, $article['id_categoy']); 
-                    ?>
-    
-                    <article class="masonry__brick entry format-standard animate-this">
-                            
-                        <div class="entry__thumb">
-                            <a href="single_article.php?id=<?php echo $article['ID_article'] ?>" class="entry__thumb-link">
-                                <img src="<?php echo $article['img_article'] ?>" 
-                                        alt="<?php echo ($article['title']); ?>"> 
-                            </a>
-                        </div>
-        
-                        <div class="entry__text">
-                            <div class="entry__header">
-    
-                                <h2 class="entry__title"><a href="single_article.php?id=<?php echo $article['ID_article'] ?>"> <?php echo $article['title'];  ?> </a></h2>
-                                <div class="entry__meta">
-                                    <span class="entry__meta-cat">
-                                         <a href="category.php?id=<?php echo $article['id_categoy']; ?>">
-                                            <?php echo $category['name_category'];  ?>
+
+                    <?php foreach($articles as $article): ?>
+                        <?php 
+                        $category = getCategoryById($pdo, $article['id_categoy']);
+                        $author = getUserById($pdo, $article['id_user']);
+                        ?>
+
+                        <article class="masonry__brick entry format-standard">
+                            <div class="entry__thumb">
+                                <a href="single_article.php?id=<?php echo $article['ID_article']; ?>" class="entry__thumb-link">
+                                    <img src="<?php echo $article['img_article']; ?>" alt="<?php echo $article['title']; ?>">
+                                </a>
+                            </div>
+
+                            <div class="entry__text">
+                                <div class="entry__header">
+                                    <div class="entry__meta">
+                                        <span class="cat-links">
+                                            <a href="#"><?php echo $category['name_category']; ?></a>
+                                        </span>
+                                        <span class="byline">
+                                            By: <a href="#"><?php echo $author['userName']; ?></a>
+                                        </span>
+                                    </div>
+                                    <h1 class="entry__title">
+                                        <a href="single_article.php?id=<?php echo $article['ID_article']; ?>">
+                                            <?php echo $article['title']; ?>
                                         </a>
-                                    </span>
-                                    <span class="entry__meta-date">
-                                        <a href="single_article.php?id=<?php echo $article['ID_article'] ?>">
-                                            <?php echo date('M d, Y', strtotime($article['created_at'])); ?>
-                                        </a>
-                                    </span>
+                                    </h1>
                                 </div>
-                                
+                                <div class="entry__excerpt">
+                                    <p><?php echo substr($article['content'], 0, 150); ?>...</p>
+                                </div>
                             </div>
-                            <div class="entry__excerpt">
-                                <p>
-                                    <?php echo $article['content'] ?>
-                                </p>
-                            </div>
-                        </div>
-        
-                    </article> <!-- end article -->
+                        </article>
+
                     <?php endforeach; ?>
 
-                    </div> <!-- end masonry -->
-
-            </div> <!-- end masonry-wrap -->
-
-            <div class="row">
-                <div class="column large-full">
-                    <nav class="pgn">
-                        <ul>
-                            <li><a class="pgn__prev" href="#0">Prev</a></li>
-                            <li><a class="pgn__num" href="#0">1</a></li>
-                            <li><span class="pgn__num current">2</span></li>
-                            <li><a class="pgn__num" href="#0">3</a></li>
-                            <li><a class="pgn__num" href="#0">4</a></li>
-                            <li><a class="pgn__num" href="#0">5</a></li>
-                            <li><span class="pgn__num dots">…</span></li>
-                            <li><a class="pgn__num" href="#0">8</a></li>
-                            <li><a class="pgn__next" href="#0">Next</a></li>
-                        </ul>
-                    </nav>
                 </div>
             </div>
+        </div>
 
-        </div> <!-- end s-content -->
-
-
-        <!-- footer
-        ================================================== -->
-        <footer class="s-footer">
+        <footer class="s-footer footer">
             <div class="row">
                 <div class="column large-full footer__content">
                     <div class="footer__copyright">
@@ -237,13 +162,11 @@ $articles = getAllArticles($pdo);
             </div>
         </footer>
 
-    </div> <!-- end s-wrap -->
+    </div>
 
-
-    <!-- Java Script
-    ================================================== -->
     <script src="assets/js/jquery-3.2.1.min.js"></script>
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/main.js"></script>
 
 </body>
+</html>

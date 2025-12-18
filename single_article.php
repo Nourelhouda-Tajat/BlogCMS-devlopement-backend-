@@ -114,17 +114,17 @@ $comments = getComments($pdo, $id);
 
                 <ul class="header__nav">
                     <li><a href="index.php" title="">Home</a></li>
-                    <li class="has-children">
-                        <a href="#0" title="">Categories</a>
-                        <ul class="sub-menu">
-                        <li><a href="category.html">Lifestyle</a></li>
-                        <li><a href="category.html">Health</a></li>
-                        <li><a href="category.html">Family</a></li>
-                        <li><a href="category.html">Management</a></li>
-                        <li><a href="category.html">Travel</a></li>
-                        <li><a href="category.html">Work</a></li>
-                        </ul>
-                    </li>
+                    
+                    <?php if (isLoggedIn()): ?>
+                        <?php if (isAuthor()): ?>
+                            <li><a href="dashboard.php" title="">Dashboard</a></li>
+                        <?php endif; ?>
+                        <li><a href="#0" title="">Welcome, <?php echo $_SESSION['username']; ?></a></li>
+                        <li><a href="login.php?action=logout" title="">Logout</a></li>
+                    <?php else: ?>
+                        <li><a href="login.php" title="">Login</a></li>
+                    <?php endif; ?>
+                </ul>
                     <li class="has-children current">
                         <a href="#0" title="">Blog</a>
                         <ul class="sub-menu">
