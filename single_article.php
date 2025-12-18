@@ -113,18 +113,22 @@ $comments = getComments($pdo, $id);
             <nav class="header__nav-wrap">
 
                 <ul class="header__nav">
-                    <li><a href="index.php" title="">Home</a></li>
-                    
-                    <?php if (isLoggedIn()): ?>
-                        <?php if (isAuthor()): ?>
-                            <li><a href="dashboard.php" title="">Dashboard</a></li>
+                    <ul class="header__nav">
+                        <li><a href="index.php" title="">Home</a></li>
+                        
+                        <?php if (isLoggedIn()): ?>
+                            <?php if (isAdmin()): ?>
+                                <li><a href="admin_dashboard.php" title="">Admin</a></li>
+                            <?php elseif (isAuthor()): ?>
+                                <li><a href="dashboard.php" title="">Dashboard</a></li>
+                            <?php endif; ?>
+                            <li><a href="#0" title="">Welcome, <?php echo $_SESSION['username']; ?></a></li>
+                            <li><a href="login.php?action=logout" title="">Logout</a></li>
+                        <?php else: ?>
+                            <li><a href="login.php" title="">Login</a></li>
                         <?php endif; ?>
-                        <li><a href="#0" title="">Welcome, <?php echo $_SESSION['username']; ?></a></li>
-                        <li><a href="login.php?action=logout" title="">Logout</a></li>
-                    <?php else: ?>
-                        <li><a href="login.php" title="">Login</a></li>
-                    <?php endif; ?>
-                </ul>
+                    </ul>
+
                     <li class="has-children current">
                         <a href="#0" title="">Blog</a>
                         <ul class="sub-menu">

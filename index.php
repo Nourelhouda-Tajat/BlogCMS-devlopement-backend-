@@ -66,7 +66,9 @@ $articles = getAllArticles($pdo);
                     <li><a href="index.php" title="">Home</a></li>
                     
                     <?php if (isLoggedIn()): ?>
-                        <?php if (isAuthor()): ?>
+                        <?php if (isAdmin()): ?>
+                            <li><a href="admin_dashboard.php" title="">Admin</a></li>
+                        <?php elseif (isAuthor()): ?>
                             <li><a href="dashboard.php" title="">Dashboard</a></li>
                         <?php endif; ?>
                         <li><a href="#0" title="">Welcome, <?php echo $_SESSION['username']; ?></a></li>
@@ -75,6 +77,7 @@ $articles = getAllArticles($pdo);
                         <li><a href="login.php" title="">Login</a></li>
                     <?php endif; ?>
                 </ul>
+
 
                 <ul class="header__social">
                     <li class="ss-facebook">
